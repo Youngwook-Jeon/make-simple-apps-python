@@ -3,6 +3,26 @@ import socket
 from tkinter import *
 from threading import Thread
 
+def receive():
+    while True:
+        try:
+            msg = s.recv(1024).decode("utf8")
+            msg_list.insert(tkinter.END, msg)
+        except:
+            print("메세지 수신 에러가 발생했습니다.")
+
+def send():
+    msg = my_msg.get()
+    my_msg.set("")
+    s.send(bytes(msg, "utf8"))
+    if msg == "#quit":
+        s.close()
+        window.close()
+
+def on_closing():
+    my_msg.set("#quit")
+    send()
+
 window = Tk()
 window.title("채팅방 애플리케이션")
 window.configure(bg="green")
@@ -25,7 +45,7 @@ label.pack()
 entry_field = Entry(window, textvariable=my_msg, fg="red", width=50)
 entry_field.pack()
 
-send_button = Button(window, text="Send", font="Aerial", fg="white", command=send)
+send_button = Button(window, text="전송", font="Aerial", fg="white", command=send)
 send_button.pack()
 
 quit_button = Button(window, text="종료", font="Aerial", fg="white", command=on_closing)
