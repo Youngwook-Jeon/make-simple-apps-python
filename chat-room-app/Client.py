@@ -8,16 +8,21 @@ def receive():
         try:
             msg = s.recv(1024).decode("utf8")
             msg_list.insert(tkinter.END, msg)
+            if msg == "#quit":
+                break
+
         except:
             print("메세지 수신 에러가 발생했습니다.")
+    s.close()
+    window.destroy()
 
 def send():
     msg = my_msg.get()
     my_msg.set("")
     s.send(bytes(msg, "utf8"))
-    if msg == "#quit":
-        s.close()
-        window.close()
+    # if msg == "#quit":
+    #     s.close()
+    #     window.close()
 
 def on_closing():
     my_msg.set("#quit")
